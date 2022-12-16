@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: aws-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aws-cli
+  template:
+    metadata:
+    {{- if .Values.podAnnotations }}
+      annotations:
+{{ toYaml .Values.podAnnotations | indent 8 }}
+    {{- end }}
+      labels:
+        app: aws-cli
+    spec:
+      containers:
+      - name: aws-cli
+        image: fstab/aws-cli
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 600; done;" ]
